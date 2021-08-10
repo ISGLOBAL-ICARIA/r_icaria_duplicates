@@ -4,8 +4,8 @@ source("tokens.R")
 # Check in every ICARIA REDCap project if there're duplicates
 vars <- c('record_id', 'study_number')
 id.column <- 'study_number'
+projects.with.dups <- list()
 for (project in names(kRedcapTokens)) {
-  #browser()
   if (project != 'profile') {
     print(paste("Computing duplicates of", project)) 
     ids <- ReadData(kRedcapAPIURL, kRedcapTokens[[project]], variables = vars)
@@ -15,7 +15,7 @@ for (project in names(kRedcapTokens)) {
       duplicated.study.numbers[!is.na(duplicated.study.numbers[id.column]), ]
     
     if (nrow(duplicated.study.numbers) > 0) {
-      View(duplicated.study.numbers)
+      projects.with.dups[[project]] <- duplicated.study.numbers
     }
   }
 }
@@ -34,6 +34,6 @@ duplicated.profile.reports <-
   duplicated.profile.reports[!is.na(duplicated.profile.reports[id.columns]), ]
 
 if (nrow(duplicated.profile.reports) > 0) {
-  View(duplicated.profile.reports)
+  projects.with.dups[['profile']] <- duplicated.profile.reports
 }
 
